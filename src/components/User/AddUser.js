@@ -1,9 +1,11 @@
 import { useState } from "react"
 import './AddUser.css'
+import { useRef } from "react"
 const AddUser = () =>{
        const [users,setUsers]   =   useState([])
-       const [user,setUser] = useState({name:'',age:0})
+       const [user,setUser] = useState({name:'',age:0,collage:''})
        const [errorMessage, setErrorMessage] = useState('');
+       const userCollageRef = useRef()
      
        const handleChanges = (e) =>{
             console.log('ev',e.target.name,e.target.value)
@@ -14,8 +16,9 @@ const AddUser = () =>{
 
     const handleSubmit = (event) =>{
       event.preventDefault()
-      
-      if(!user.name.length){
+      let collage = userCollageRef.current.value;
+      user.collage = collage;
+      if(!user.name.trim().length || !user.collage.trim().length){
          setErrorMessage('Please Enter a valid name and age (non-empty values).')
       }
       else if(user.age <= 0){
@@ -23,9 +26,10 @@ const AddUser = () =>{
       }
       else{
          setErrorMessage(``)
-         setUsers([...users,`${user.name} (${user.age} years old)`])
+         setUsers([...users,`${user.name} (${user.age} years old) your collage is ${user.collage}`])
       }
       setUser({name:'',age:0})
+      userCollageRef.current.value=''
     
     }
 
@@ -40,9 +44,13 @@ const AddUser = () =>{
             <div className="form-data">
             <label htmlFor="userAge">Age: </label>
             <input type="number" name='age' value={user.age}  onChange={handleChanges} />
+            </div>
+            <div className="form-data">
+            <label htmlFor="userCollage">Collage: </label>
+            <input type="text" ref={userCollageRef} />
+            </div>
             <div className="submit-button">
             <button type="submit">Add User</button>
-            </div>
             </div>
          </form>
          <div className="json-data">
