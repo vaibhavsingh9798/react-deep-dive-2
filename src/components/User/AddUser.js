@@ -1,14 +1,29 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import './AddUser.css'
-import { useRef } from "react"
+import ShowLogin from "../UI/ShowLogin"
 const AddUser = () =>{
-       const [users,setUsers]   =   useState([])
-       const [user,setUser] = useState({name:'',age:0,collage:''})
-       const [errorMessage, setErrorMessage] = useState('');
-       const userCollageRef = useRef()
+       const [userLogin,setUserLogin]   =   useState(false)
+       const [user,setUser] = useState({email:'',password:'',collage:''})
+       const [errorMessage, setErrorMessage] = useState('fill information');
+
+
+       useEffect(()=>{
+
+         if(!user.email.trim().length || !user.password.trim().length || !user.collage.trim().length){
+            setErrorMessage('Please Enter a valid email and password and collage')
+         }
+         else if(user.password.trim().length<7){
+            setErrorMessage(`Please Enter a valid password`)
+         }
+         else{
+            setErrorMessage(``)
+           // localStorage.setItem('isLoginUser',1)
+           // setUserLogin(true)
+         }
+         
+       },[user])
      
        const handleChanges = (e) =>{
-            console.log('ev',e.target.name,e.target.value)
          let name = e.target.name;
          let value = e.target.value;
          setUser({...user,[name]:value})
@@ -16,54 +31,40 @@ const AddUser = () =>{
 
     const handleSubmit = (event) =>{
       event.preventDefault()
-      let collage = userCollageRef.current.value;
-      user.collage = collage;
-      if(!user.name.trim().length || !user.collage.trim().length){
-         setErrorMessage('Please Enter a valid name and age (non-empty values).')
+      if(!errorMessage){
+      localStorage.setItem('isLoginUser',1)
+       setUserLogin(true)
       }
-      else if(user.age <= 0){
-         setErrorMessage(`Please Enter a valid age (>0) .`)
-      }
-      else{
-         setErrorMessage(``)
-         setUsers([...users,`${user.name} (${user.age} years old) your collage is ${user.collage}`])
-      }
-      setUser({name:'',age:0})
-      userCollageRef.current.value=''
-    
+      setUser({email:'',password:''})
     }
 
     return (
         <>
         <div className="form-container">
+          {!userLogin &&
          <form onSubmit={handleSubmit}> 
          <div className="form-data">
-            <label htmlFor="userName">Name:  </label>
-            <input type="text"  name='name' value={user.name} onChange={handleChanges}/>
+            <label htmlFor="userName">Email:  </label>
+            <input type="email"  name='email' value={user.email} onChange={handleChanges}/>
             </div>
             <div className="form-data">
-            <label htmlFor="userAge">Age: </label>
-            <input type="number" name='age' value={user.age}  onChange={handleChanges} />
+            <label htmlFor="userAge">Password: </label>
+            <input type="password" name='password' value={user.password}  onChange={handleChanges} />
             </div>
             <div className="form-data">
             <label htmlFor="userCollage">Collage: </label>
-            <input type="text" ref={userCollageRef} />
+            <input type="text" name='collage' value={user.collage}  onChange={handleChanges} />
             </div>
             <div className="submit-button">
-            <button type="submit">Add User</button>
+            <button type="submit">Log In</button>
             </div>
          </form>
-         <div className="json-data">
-          {errorMessage && <h4 style={{color:'red'}}>{errorMessage}</h4>}
-          {!errorMessage &&  users.map((user,ind) => (
-            
-              <ul key={ind}>
-              
-               <li>{user}</li>
-            
-              </ul>
-             ))}
+}
+
+         <div className={!userLogin ? "json-data" : ""}>
+          {!userLogin && <h4 style={{color:'red'}}>{errorMessage}</h4>}
          </div>
+         {userLogin && <ShowLogin />} 
          </div>
         </>
     )
