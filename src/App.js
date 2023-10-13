@@ -1,30 +1,35 @@
-
-import { useState } from 'react';
+import { useEffect , useState} from 'react';
 import './App.css';
-import AddUser from './components/User/AddUser';
-import ShowLogin from './components/UI/ShowLogin';
-import { useEffect } from 'react';
+
+import AuthContext from './store/auth-context';
+import ShowDashBoard from './components/UI/showDashBoard';
+import LoginForm from './components/User/LoginForm';
+
 
 
 const App = () => {
-   const [isLogin,setIsLogin] =  useState(true)
+   const [isLogin,setIsLogin] =  useState(false)
     
+   console.log('app')
    useEffect(()=>{
   let login= localStorage.getItem('isLoginUser')
-  if(login != 1)
-  setIsLogin(false)
-   },[])
+  if(login == 1)
+  setIsLogin(true)
+   },[isLogin])
+ 
+    const handleLogin = ()=>{
+       localStorage.setItem('isLoginUser',1)
+       setIsLogin(true)
+    }
 
-   const show = () => {
-     if(isLogin)
-     return <ShowLogin />
-    else
-    return  <AddUser /> 
-   }
+ console.log('app isl',isLogin)
 
   return (
     <>
-     {show()}
+       <AuthContext.Provider value={{isLogin:isLogin}}>
+        {isLogin && <ShowDashBoard />}
+        {!isLogin && <LoginForm onLogin={handleLogin} />}
+       </AuthContext.Provider>
     </>
   );
 };

@@ -1,9 +1,9 @@
-import { useEffect, useReducer, useState } from "react"
-import './AddUser.css'
-import ShowLogin from "../UI/ShowLogin"
+import {  useContext, useEffect, useReducer, useState } from "react"
+import './LoginForm.css'
+import ShowDashBoard from "../UI/showDashBoard"
+import AuthContext from "../../store/auth-context";
 
 function reducer (state,action){
-   console.log('reducer',action)
       switch(action.type){
          case'email_change':{
            return {
@@ -24,15 +24,17 @@ function reducer (state,action){
             break;
       }
 }
-const AddUser = () =>{
-       const [userLogin,setUserLogin]   =   useState(false)
+const LoginForm = (props) =>{
+   const {isLogin} = useContext(AuthContext)
+   console.log('login',isLogin)
+       const [userLogin,setUserLogin]   =   useState(isLogin)
        const [errorMessage, setErrorMessage] = useState('fill information');
        const [state,dispatch] = useReducer(reducer,{email:'',password:''})
+ 
 
 
        useEffect(()=>{
        let identifire =  setTimeout(()=> { 
-          console.log('uf',state.email,state.password)
          if(!state.email.trim().length || !state.password.trim().length){
             setErrorMessage('Please Enter a valid email and password and collage')
          }
@@ -61,18 +63,17 @@ const AddUser = () =>{
 
     const handleSubmit = (event) =>{
       event.preventDefault()
-      console.log('err',errorMessage)
       if(!errorMessage){
-      localStorage.setItem('isLoginUser',1)
        setUserLogin(true)
+       props.onLogin()
       }
       dispatch({type:'empty'})
     }
 
-    return (
+    return ( 
         <>
         <div className="form-container">
-          {!userLogin &&
+          {!isLogin &&
          <form onSubmit={handleSubmit}> 
          <div className="form-data">
             <label htmlFor="userName">Email:  </label>
@@ -91,10 +92,9 @@ const AddUser = () =>{
          <div className={!userLogin ? "json-data" : ""}>
           {!userLogin && <h4 style={{color:'red'}}>{errorMessage}</h4>}
          </div>
-         {userLogin && <ShowLogin />} 
+         {userLogin && <ShowDashBoard />} 
          </div>
         </>
     )
 }
-
-export default AddUser ;
+export default LoginForm ;
