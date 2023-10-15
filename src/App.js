@@ -1,4 +1,4 @@
-import { useEffect , useState} from 'react';
+import { useContext} from 'react';
 import './App.css';
 
 import AuthContext from './store/auth-context';
@@ -8,30 +8,18 @@ import LoginForm from './components/User/LoginForm';
 
 
 const App = () => {
-   const [isLogin,setIsLogin] =  useState(false)
-    
-   console.log('app')
-   useEffect(()=>{
-  let login= localStorage.getItem('isLoginUser')
-  if(login == 1)
-  setIsLogin(true)
-   },[isLogin])
- 
-    const handleLogin = ()=>{
-       localStorage.setItem('isLoginUser',1)
-       setIsLogin(true)
-    }
-
- console.log('app isl',isLogin)
+  
+   const ctx = useContext(AuthContext)
 
   return (
     <>
-       <AuthContext.Provider value={{isLogin:isLogin}}>
-        {isLogin && <ShowDashBoard />}
-        {!isLogin && <LoginForm onLogin={handleLogin} />}
-       </AuthContext.Provider>
+       
+        {ctx.isLoggedIn && <ShowDashBoard />}
+        {!ctx.isLoggedIn && <LoginForm/>}
+      
     </>
   );
 };
 
 export default App;
+ 

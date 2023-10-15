@@ -25,13 +25,13 @@ function reducer (state,action){
       }
 }
 const LoginForm = (props) =>{
-   const {isLogin} = useContext(AuthContext)
-   console.log('login',isLogin)
-       const [userLogin,setUserLogin]   =   useState(isLogin)
+   
+   
+       const [userLogin,setUserLogin]   =   useState(false)
        const [errorMessage, setErrorMessage] = useState('fill information');
        const [state,dispatch] = useReducer(reducer,{email:'',password:''})
  
-
+       const authCtx = useContext(AuthContext)
 
        useEffect(()=>{
        let identifire =  setTimeout(()=> { 
@@ -65,7 +65,7 @@ const LoginForm = (props) =>{
       event.preventDefault()
       if(!errorMessage){
        setUserLogin(true)
-       props.onLogin()
+       authCtx.onLogin()
       }
       dispatch({type:'empty'})
     }
@@ -73,7 +73,7 @@ const LoginForm = (props) =>{
     return ( 
         <>
         <div className="form-container">
-          {!isLogin &&
+          {!authCtx.isLoggedIn &&
          <form onSubmit={handleSubmit}> 
          <div className="form-data">
             <label htmlFor="userName">Email:  </label>
@@ -90,9 +90,9 @@ const LoginForm = (props) =>{
 }
 
          <div className={!userLogin ? "json-data" : ""}>
-          {!userLogin && <h4 style={{color:'red'}}>{errorMessage}</h4>}
+          {!authCtx.isLoggedIn && <h4 style={{color:'red'}}>{errorMessage}</h4>}
          </div>
-         {userLogin && <ShowDashBoard />} 
+         {authCtx.isLoggedIn && <ShowDashBoard />} 
          </div>
         </>
     )
