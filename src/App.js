@@ -2,7 +2,7 @@ import { useContext} from 'react';
 import './App.css';
 
 import AuthContext from './store/auth-context';
-import ShowDashBoard from './components/UI/showDashBoard';
+import ShowDashBoard from './components/UI/ShowLogin/showDashBoard';
 import LoginForm from './components/User/LoginForm';
 
 

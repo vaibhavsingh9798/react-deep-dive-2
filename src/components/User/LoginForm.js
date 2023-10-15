@@ -1,7 +1,8 @@
 import {  useContext, useEffect, useReducer, useState } from "react"
 import './LoginForm.css'
-import ShowDashBoard from "../UI/showDashBoard"
+import ShowDashBoard from "../UI/ShowLogin/showDashBoard"
 import AuthContext from "../../store/auth-context";
+import Input from "../UI/Input/Input";
 
 function reducer (state,action){
       switch(action.type){
@@ -73,21 +74,15 @@ const LoginForm = (props) =>{
     return ( 
         <>
         <div className="form-container">
-          {!authCtx.isLoggedIn &&
+         
          <form onSubmit={handleSubmit}> 
-         <div className="form-data">
-            <label htmlFor="userName">Email:  </label>
-            <input type="email"  name='email' value={state.email} onChange={handleChanges}/>
-            </div>
-            <div className="form-data">
-            <label htmlFor="userAge">Password: </label>
-            <input type="password" name='password' value={state.password}  onChange={handleChanges} />
-            </div>
+          <Input type={'email'} name={'email'} label={'Email '} value={state.email} onChange={handleChanges} />
+          <Input type={'password'} name={'password'} label={'Password '} value={state.password} onChange={handleChanges} />
             <div className="submit-button">
             <button type="submit">Log In</button>
             </div>
          </form>
-}
+
 
          <div className={!userLogin ? "json-data" : ""}>
           {!authCtx.isLoggedIn && <h4 style={{color:'red'}}>{errorMessage}</h4>}

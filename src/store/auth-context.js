@@ -2,10 +2,11 @@ import { createContext, useEffect, useState } from "react";
 
 let AuthContext = createContext(
     {isLoggedIn:false,
-     onLogin:(email,password) => { console.log('onLoin call')}
+     onLogin:(email,password) => { console.log('onLoin call')} 
     })
 
   export const AuthContextProvider = (props) =>{
+            console.log('pro',props)
               const [isLoggedIn,setIsLoggedIn]  = useState(false)
 
                 useEffect(()=>{
